@@ -2,39 +2,37 @@ const API_KEY = 'c33a1a7f82b09328d11cb7584c880072';
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
-const grid = document.getElementById('movie-grid');
-const search = document.getElementById('movie-search');
-const modal = document.getElementById('booking-modal');
-const seatGrid = document.getElementById('seat-grid');
-const count = document.getElementById('count');
-const total = document.getElementById('total');
-const bookBtn = document.getElementById('book-btn');
-
 let selectedCount = 0;
-const TICKET_PRICE = 200;
+const TICKET_PRICE = 250;
 
-// Fetch Movies
-async function getMovies(endpoint) {
+// Initialize sections
+window.onload = () => {
+    fetchMovies('/movie/popular', 'trending-grid');
+    fetchMovies('/discover/movie?with_original_language=en', 'hollywood-grid');
+    fetchMovies('/discover/movie?with_original_language=hi', 'bollywood-grid');
+};
+
+async function fetchMovies(endpoint, gridId) {
     try {
-        const res = await fetch(`${BASE_URL}${endpoint}&api_key=${API_KEY}`);
+        const res = await fetch(`${BASE_URL}${endpoint}${endpoint.includes('?') ? '&' : '?'}api_key=${API_KEY}`);
         const data = await res.json();
-        render(data.results);
+        renderMovies(data.results, gridId);
     } catch (err) {
-        console.error("API Fetch Error:", err);
+        console.error("Error loading movies:", err);
     }
 }
 
-function render(movies) {
+function renderMovies(movies, gridId) {
+    const grid = document.getElementById(gridId);
     grid.innerHTML = '';
-    movies.forEach(movie => {
-        if (!movie.poster_path) return;
+    movies.slice(0, 6).forEach(movie => {
         const card = document.createElement('div');
         card.className = 'movie-card';
         card.innerHTML = `
             <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
             <div class="card-body">
                 <h4>${movie.title}</h4>
-                <p>⭐ ${movie.vote_average}</p>
+                <p><i class='bx bxs-star' style='color: #fbbf24'></i> ${movie.vote_average}</p>
             </div>
         `;
         card.onclick = () => openBooking(movie.title);
@@ -42,31 +40,28 @@ function render(movies) {
     });
 }
 
-// Seat Logic
 function openBooking(title) {
     document.getElementById('modal-movie-title').innerText = title;
-    modal.classList.remove('hidden');
+    document.getElementById('booking-modal').classList.remove('hidden');
     generateSeats();
 }
 
 function closeBooking() {
-    modal.classList.add('hidden');
+    document.getElementById('booking-modal').classList.add('hidden');
     selectedCount = 0;
     updateUI();
 }
 
 function generateSeats() {
+    const seatGrid = document.getElementById('seat-grid');
     seatGrid.innerHTML = '';
     for (let i = 0; i < 48; i++) {
         const seat = document.createElement('div');
         seat.className = 'seat';
-        // Randomly simulate occupied seats
         if (Math.random() > 0.8) seat.classList.add('occupied');
-        
         seat.onclick = () => {
             if (!seat.classList.contains('occupied')) {
                 seat.classList.toggle('selected');
-                selectedCount = document.querySelectorAll('.seat.selected').length;
                 updateUI();
             }
         };
@@ -75,19 +70,28 @@ function generateSeats() {
 }
 
 function updateUI() {
-    count.innerText = selectedCount;
-    total.innerText = selectedCount * TICKET_PRICE;
-    bookBtn.disabled = selectedCount === 0;
+    selectedCount = document.querySelectorAll('.seat.selected').length;
+    document.getElementById('count').innerText = selectedCount;
+    document.getElementById('total').innerText = selectedCount * TICKET_PRICE;
+    document.getElementById('book-btn').disabled = selectedCount === 0;
 }
 
-// Search & Initial Load
-search.addEventListener('input', (e) => {
-    const query = e.target.value;
-    if (query) {
-        getMovies(`/search/movie?query=${query}`);
-    } else {
-        getMovies('/movie/popular?language=en-US');
-    }
-});
+// The "Visual Booking" interaction
+function confirmBooking() {
+    // 1. Confetti burst
+    confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#f59e0b', '#ffffff', '#3b82f6']
+    });
 
-getMovies('/movie/popular?language=en-US');
+    // 2. Hide modal and show success toast
+    closeBooking();
+    const toast = document.getElementById('success-toast');
+    toast.classList.remove('hidden');
+    
+    setTimeout(() => {
+        toast.classList.add('hidden');
+    }, 4000);
+}

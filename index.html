@@ -3,64 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movier | Premium Ticket Booking</title>
+    <title>Movier | Your Private Cinema</title>
     <link rel="stylesheet" href="style.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <nav class="navbar">
         <div class="logo">MOVIER</div>
         <div class="search-container">
-            <input type="text" id="movie-search" placeholder="Search for movies...">
             <i class='bx bx-search'></i>
+            <input type="text" id="movie-search" placeholder="Search for movies...">
         </div>
     </nav>
 
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Cinema in <span class="highlight">4K Ultra HD</span></h1>
-                <p>Book your favorite movies instantly with the best seat selection.</p>
+    <section class="branding-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="badge">NOW STREAMING</span>
+            <h1>MOVIER</h1>
+            <p>Experience the magic of cinema. Browse the latest blockbusters, pick your perfect seat, and book your digital ticket in seconds.</p>
+            <div class="hero-btns">
+                <button class="btn-primary" onclick="document.getElementById('trending').scrollIntoView()">Explore Now</button>
             </div>
+        </div>
+    </section>
+
+    <main class="content-wrapper">
+        <section class="movie-section" id="trending">
+            <h2 class="section-title">Trending Blockbusters</h2>
+            <div id="trending-grid" class="movie-grid"></div>
         </section>
 
         <section class="movie-section">
-            <h2 class="section-title">Trending Now</h2>
-            <div id="movie-grid" class="movie-grid">
-                </div>
+            <h2 class="section-title">Hollywood Hits</h2>
+            <div id="hollywood-grid" class="movie-grid"></div>
         </section>
 
-        <section id="booking-modal" class="modal hidden">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="modal-movie-title">Select Seats</h2>
-                    <span class="close-btn" onclick="closeBooking()">&times;</span>
-                </div>
-                
-                <div class="screen-container">
-                    <div class="screen"></div>
-                    <p class="screen-text">SCREEN THIS WAY</p>
-                </div>
-
-                <div class="seat-grid" id="seat-grid">
-                    </div>
-
-                <div class="legend">
-                    <div class="item"><span class="seat"></span> Available</div>
-                    <div class="item"><span class="seat selected"></span> Selected</div>
-                    <div class="item"><span class="seat occupied"></span> Booked</div>
-                </div>
-
-                <div class="modal-footer">
-                    <div class="price-info">
-                        <p>Seats: <span id="count">0</span></p>
-                        <p>Total: ₹<span id="total">0</span></p>
-                    </div>
-                    <button id="book-btn" class="confirm-btn" disabled>Confirm Booking</button>
-                </div>
-            </div>
+        <section class="movie-section">
+            <h2 class="section-title">Bollywood Magic</h2>
+            <div id="bollywood-grid" class="movie-grid"></div>
         </section>
     </main>
+
+    <section id="booking-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modal-movie-title">Movie Title</h2>
+                    <p class="subtitle">Select your preferred seating</p>
+                </div>
+                <span class="close-btn" onclick="closeBooking()">&times;</span>
+            </div>
+            
+            <div class="screen-container">
+                <div class="screen"></div>
+                <p class="screen-text">GOLDEN GLASS SCREEN</p>
+            </div>
+
+            <div class="seat-grid" id="seat-grid"></div>
+
+            <div class="legend">
+                <div class="item"><span class="seat"></span> Available</div>
+                <div class="item"><span class="seat selected"></span> Selected</div>
+                <div class="item"><span class="seat occupied"></span> Booked</div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="price-info">
+                    <p>Tickets: <strong id="count">0</strong></p>
+                    <p>Total: <span class="currency">₹</span><strong id="total">0</strong></p>
+                </div>
+                <button id="book-btn" class="confirm-btn" disabled onclick="confirmBooking()">Confirm Booking</button>
+            </div>
+        </div>
+    </section>
+
+    <div id="success-toast" class="toast hidden">
+        <i class='bx bxs-check-circle'></i>
+        <div class="toast-text">
+            <h4>Booking Confirmed!</h4>
+            <p>Your tickets have been sent to your email.</p>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

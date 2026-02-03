@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movier | Premium Ticket Booking</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">MOVIER</div>
+        <div class="search-container">
+            <input type="text" id="movie-search" placeholder="Search for movies...">
+            <i class='bx bx-search'></i>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Cinema in <span class="highlight">4K Ultra HD</span></h1>
+                <p>Book your favorite movies instantly with the best seat selection.</p>
+            </div>
+        </section>
+
+        <section class="movie-section">
+            <h2 class="section-title">Trending Now</h2>
+            <div id="movie-grid" class="movie-grid">
+                </div>
+        </section>
+
+        <section id="booking-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-movie-title">Select Seats</h2>
+                    <span class="close-btn" onclick="closeBooking()">&times;</span>
+                </div>
+                
+                <div class="screen-container">
+                    <div class="screen"></div>
+                    <p class="screen-text">SCREEN THIS WAY</p>
+                </div>
+
+                <div class="seat-grid" id="seat-grid">
+                    </div>
+
+                <div class="legend">
+                    <div class="item"><span class="seat"></span> Available</div>
+                    <div class="item"><span class="seat selected"></span> Selected</div>
+                    <div class="item"><span class="seat occupied"></span> Booked</div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="price-info">
+                        <p>Seats: <span id="count">0</span></p>
+                        <p>Total: ₹<span id="total">0</span></p>
+                    </div>
+                    <button id="book-btn" class="confirm-btn" disabled>Confirm Booking</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
